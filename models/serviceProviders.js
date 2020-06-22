@@ -24,6 +24,7 @@ const serviceProvidersSchemas = mongoose.Schema(
         catagory: [{ type: String, enum: [process.env.CATAGORY] }],
         title: String,
         descrption: String,
+        images: Array,
         offers: String,
         ratings: String,
         status: Boolean,

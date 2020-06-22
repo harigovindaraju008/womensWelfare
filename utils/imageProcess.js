@@ -58,9 +58,11 @@ const loadImage = (bucketName, fileName, response) => {
       if (!files || files.length === 0) {
         // response.redirect("/img/sample.jpg");
       } else {
-        response.setHeader("Content-Type", files[0].contentType);
-        let stream = gfs().openDownloadStream(files[0]._id);
-        stream.pipe(response);
+        files.map((images) => {
+          response.setHeader("Content-Type", images.contentType);
+          let stream = gfs().openDownloadStream(images._id);
+          stream.pipe(response);
+        });
       }
     });
 };

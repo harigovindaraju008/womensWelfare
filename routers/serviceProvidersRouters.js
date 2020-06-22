@@ -2,6 +2,7 @@
 const ServiceProviders = require("../models/serviceProviders");
 const verifyProviders = require("../middlewares/verifyTokenProviders");
 const { saveImage, loadImage } = require("../utils/imageProcess");
+
 //npm packages
 const express = require("express");
 const routers = express.Router();
@@ -42,6 +43,11 @@ routers.get("/:id/providerImage", verifyProviders, async (req, res) => {
   loadImage("serviceProviders.image", serviceProviderId, res);
 });
 
+routers.get("/:fileName/providerWorkImage", async (req, res) => {
+  const serviceProviderWorkName = req.params.fileName;
+  loadImage("serviceProviders.works.image", serviceProviderWorkName, res);
+});
+
 //user work info
 routers.get("/userWorkInfo/:id", async (req, res) => {
   try {
@@ -56,6 +62,17 @@ routers.get("/userWorkInfo/:id", async (req, res) => {
 
 //regisation service Providers
 routers.post("/register", async (req, res) => {
+  if (!req.files) {
+    return res.status(400).send("invalid key value ");
+  }
+
+  const { isError, message } = await imageValidationObject(
+    req.files.serviceProviderImage
+  );
+  if (isError) {
+    return res.status(400).send(message);
+  }
+
   const { error } = validateServiceProviders(req.body);
   if (error) {
     res.status(400).send(error.details[0].message);
@@ -149,11 +166,14 @@ routers.post("/addworkers", verifyProviders, async (req, res) => {
       value.id,
       {
         $push: { works: [value.works] },
+      },
+      {
+        new: true,
       }
     );
     // console.log(updateServiceProvider);
     if (updateServiceProvider) {
-      return res.status(200).send("updated successfully");
+      return res.status(200).send(updateServiceProvider);
     } else {
       res.status(400).send("invalid ID");
     }
@@ -162,6 +182,51 @@ routers.post("/addworkers", verifyProviders, async (req, res) => {
     res.status(400).send(err.message);
   }
 });
+
+//adding images for workers
+
+routers.put("/addWorkPic/:id", async (req, res) => {
+  const { isError, message, files, id } = await imageValidation(
+    req.files,
+    req.params.id
+  );
+  if (isError) {
+    return res.status(400).send(message);
+  }
+
+  let allfileNames = [];
+  files.images.map(async (img, index) => {
+    let fileName = "" + id + "-" + (index + 1);
+    allfileNames.push(fileName);
+    await saveImage("serviceProviders.works.image", img, fileName);
+    if (index + 1 === files.images.length)
+      try {
+        await ServiceProviders.findOneAndUpdate(
+          { "works._id": id },
+          {
+            "works.$.images": allfileNames,
+          }
+        );
+        res.status(200).send("images is successfully updated");
+      } catch (err) {
+        console.log(err);
+        res.status(400).send(err.message);
+      }
+  });
+});
+
+// routers.put("/updateWorkPic/:id/:filename", async (req, res) => {
+//   const { isError, message, files, id } = await imageValidation(
+//     req.files,
+//     req.params.id,
+//     req.params.filename
+//   );
+//   if (isError) {
+//     return res.status(400).send(message);
+//   }
+//   await saveImage("serviceProviders.works.image", img, fileName);
+//   res.status(200).send("images is successfully updated");
+// });
 
 //adding reviews
 routers.post("/userReview", async (req, res) => {
@@ -251,13 +316,17 @@ routers.put("/updateProvider/:id", async (req, res) => {
 });
 
 routers.put("/updateProviderPic/:id", async (req, res) => {
-  const checkingWorkID = mongoose.Types.ObjectId.isValid(
-    req.params.id.toString()
-  );
-
-  if (!checkingWorkID) {
-    return res.status(400).send("Invalid Provider Id");
+  if (!req.files) {
+    return res.status(400).send("invalid key value ");
   }
+  const { isError, message } = await imageValidationObject(
+    req.files.serviceProviderImage,
+    req.params.id
+  );
+  if (isError) {
+    return res.status(400).send(message);
+  }
+
   const updateProviderPic = await ServiceProviders.findById(req.params.id);
   if (updateProviderPic) {
     //if (req.file && req.file.fieldname === "serviceProviderImage" && savedProviders._id) {
@@ -274,7 +343,99 @@ routers.put("/updateProviderPic/:id", async (req, res) => {
   }
 });
 
+//image validation
+
+const imageValidation = (files, id) => {
+  let errors = {
+    isError: true,
+    message: "",
+    files,
+    id,
+  };
+
+  const checkingWorkID = mongoose.Types.ObjectId.isValid(id.toString());
+  if (checkingWorkID !== true) {
+    errors.message = "invalid userID or WorkID";
+    return errors;
+  }
+
+  // console.log(files, id);
+  if (!files) {
+    errors.message = "Please upload atleast only two images.";
+    return errors;
+  }
+
+  const file = files.images;
+  // console.log(file.length);
+  if (!file || file.length <= 1 || file.length === undefined) {
+    errors.message = "Please upload atleast only two images.";
+    return errors;
+  } else if (file.length > 3) {
+    errors.message = "Please upload  only three images.";
+    return errors;
+  }
+
+  const checkIsImg = file.find((img) => !img.mimetype.startsWith("image"));
+  if (checkIsImg) {
+    errors.message = "Not an image! Please upload only images.";
+    return errors;
+  }
+
+  const checkImgSize = file.find(({ size }) => size >= 1024 * 1024 * 2);
+  if (checkImgSize) {
+    errors.message = "Too large image! Please upload below 2 mb each images.";
+    return errors;
+  }
+  errors.isError = false;
+  return errors;
+};
+
+const imageValidationObject = (files, id) => {
+  let errors = {
+    isError: true,
+    message: "",
+    files,
+    id,
+  };
+
+  if (id) {
+    const checkingWorkID = mongoose.Types.ObjectId.isValid(id.toString());
+    if (checkingWorkID !== true) {
+      errors.message = "invalid userID or WorkID";
+      return errors;
+    }
+  }
+
+  // console.log(files, id);
+  if (!files) {
+    errors.message = "Please upload  images.";
+    return errors;
+  }
+
+  const file = files;
+  // console.log(file.length);
+  if (!file || file === undefined || file === null) {
+    errors.message = "Please upload  images.";
+    return errors;
+  }
+
+  const checkIsImg = file.mimetype.startsWith("image");
+  if (!checkIsImg) {
+    errors.message = "Not an image! Please upload only images.";
+    return errors;
+  }
+
+  const checkImgSize = file.size >= 1024 * 1024 * 2;
+  if (checkImgSize) {
+    errors.message = "Too large image! Please upload below 2 mb each images.";
+    return errors;
+  }
+  errors.isError = false;
+  return errors;
+};
+
 //serviceProviders validations
+
 const validateServiceProviders = (data) => {
   const schemas = {
     name: joi.string().min(3).max(20),

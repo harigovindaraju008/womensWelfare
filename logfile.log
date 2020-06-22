@@ -1,0 +1,14 @@
+{"level":"info","message":"Listening on port 4001...","timestamp":"2020-06-22T07:46:21.656Z"}
+{"level":"info","message":"Connected to mongodb://localhost/womensWelfare...","timestamp":"2020-06-22T07:46:21.680Z"}
+{"level":"info","message":"Listening on port 4001...","timestamp":"2020-06-22T07:56:38.461Z"}
+{"level":"info","message":"Connected to mongodb://localhost/womensWelfare...","timestamp":"2020-06-22T07:56:38.478Z"}
+{"level":"info","message":"Listening on port 4001...","timestamp":"2020-06-22T07:56:56.089Z"}
+{"level":"info","message":"Connected to mongodb://localhost/womensWelfare...","timestamp":"2020-06-22T07:56:56.111Z"}
+{"level":"info","message":"Listening on port 4001...","timestamp":"2020-06-22T08:04:00.847Z"}
+{"level":"info","message":"Connected to mongodb://localhost/womensWelfare...","timestamp":"2020-06-22T08:04:00.871Z"}
+{"level":"info","message":"Listening on port 4001...","timestamp":"2020-06-22T08:09:06.865Z"}
+{"level":"info","message":"Connected to mongodb://localhost/womensWelfare...","timestamp":"2020-06-22T08:09:06.880Z"}
+{"level":"info","message":"Listening on port 4001...","timestamp":"2020-06-22T08:09:09.619Z"}
+{"level":"info","message":"Connected to mongodb://localhost/womensWelfare...","timestamp":"2020-06-22T08:09:09.634Z"}
+{"level":"info","message":"Listening on port 4001...","timestamp":"2020-06-22T08:14:08.800Z"}
+{"level":"info","message":"Connected to mongodb+srv://crazyharan:yamunahari008@cluster0-9sugw.mongodb.net/womensWelfare?retryWrites=true&w=majority...","timestamp":"2020-06-22T08:14:09.497Z"}
