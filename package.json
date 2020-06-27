@@ -33,6 +33,7 @@
     "jsonwebtoken": "^8.5.1",
     "mongodb": "^3.5.9",
     "mongoose": "^5.9.18",
+    "nodemailer": "^6.4.10",
     "winston": "^2.4.0",
     "winston-mongodb": "^5.0.1"
   }
