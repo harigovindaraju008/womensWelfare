@@ -6,7 +6,7 @@ const consumers = require("../routers/consumersRouters");
 const serviceProviders = require("../routers/serviceProvidersRouters");
 const admin = require("../routers/adminRouters");
 const error = require("../middlewares/error");
-require("dotenv").config();
+
 
 module.exports = function (app) {
   app.use(cors());

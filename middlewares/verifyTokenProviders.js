@@ -1,5 +1,5 @@
 const jwt = require("jsonwebtoken");
-const serviceProviders = require("../models/serviceProviders");
+const { ServiceProviders } = require("../models/serviceProviders");
 
 module.exports = async function verifyToken(req, res, next) {
   const token = req.header("provider_token");
@@ -14,7 +14,7 @@ module.exports = async function verifyToken(req, res, next) {
     // req.key = SecretKey;
     const { emailId } = jwt.verify(token, SecretKey);
     req.emailId = emailId;
-    const verify = await serviceProviders.findOne({ emailId: emailId });
+    const verify = await ServiceProviders.findOne({ emailId: emailId });
     if (!verify) {
       res.status(400).send("invalid Access");
       return;

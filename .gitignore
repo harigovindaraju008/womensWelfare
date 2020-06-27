@@ -1,5 +1,7 @@
 .env
 /node_modules
-/client/node_modules
+client/node_modules
 /uncaughtExceptions.log
 /logfile.log
+uncaughtExceptions.log
+logfile.log
