@@ -18,7 +18,7 @@ const savedOtpSchema = mongoose.model("otpverification", verifyOtpSchema);
 const validationEmail = (data) => {
   const schema = {
     emailID: joi.string().email().required(),
-    generatedOtp: joi.number().required(),
+    generatedOtp: joi.number(),
   };
   return joi.validate(data, schema);
 };
