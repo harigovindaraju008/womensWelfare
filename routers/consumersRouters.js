@@ -30,6 +30,7 @@ const ReferalsMiddleware = async (req, res, next) => {
 
 //email verification
 routers.post("/otpGenerate", [validate(validationOtp)], async (req, res) => {
+  console.log(req.body);
   const data = req.body;
   const Otp = await otpGenerator(1000, 9999);
   // console.log(Otp);
