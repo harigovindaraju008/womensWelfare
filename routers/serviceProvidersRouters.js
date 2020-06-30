@@ -314,7 +314,7 @@ routers.post(
     }
   }
 );
-
+//updating service porviders details
 routers.put(
   "/updateProvider/:id",
   [verifyProviders, validateObjectId, validate(validateServiceProviders)],
@@ -359,6 +359,36 @@ routers.put("/updateProviderPic/:id", async (req, res) => {
     res.status(400).send("Invalid Provider Id");
   }
 });
+
+routers.post(
+  "/hiringReq",
+  [verifyProviders, validate(validateServiceProviders)],
+  async (req, res) => {
+    const value = req.body;
+    const checkingTitle = await ServiceProviders.findOne({
+      "jobs.title": value.jobs.title,
+    });
+    if (checkingTitle) return res.status(400).send("Title must not be same!!");
+
+    try {
+      const updateServiceProvider = await ServiceProviders.findByIdAndUpdate(
+        value.id,
+        {
+          $push: { jobs: [value.jobs] },
+        }
+      );
+      // console.log(updateServiceProvider);
+      if (updateServiceProvider) {
+        return res.status(200).send("job Added!!");
+      } else {
+        res.status(400).send("invalid ID");
+      }
+    } catch (err) {
+      console.log(err);
+      res.status(400).send(err.message);
+    }
+  }
+);
 
 //image validation
 

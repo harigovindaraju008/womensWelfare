@@ -29,7 +29,7 @@ const ReferalsMiddleware = async (req, res, next) => {
 };
 
 //email verification
-routers.post("/otpGenerate", async (req, res) => {
+routers.post("/otpGenerate", [validate(validationOtp)], async (req, res) => {
   const data = req.body;
   const Otp = await otpGenerator(1000, 9999);
   // console.log(Otp);
@@ -42,7 +42,7 @@ routers.post("/otpGenerate", async (req, res) => {
   res.status(200).send(savedOTP);
   const sent = await sendmail(
     savedOTP.generatedOtp,
-    "ONE TIMW PASSWORD",
+    "ONE TIME PASSWORD",
     savedOTP.emailId,
     "otpVerification"
   );

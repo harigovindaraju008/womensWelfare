@@ -46,6 +46,27 @@ const serviceProvidersSchemas = mongoose.Schema(
         }),
       },
     ],
+    jobs: [
+      {
+        type: new mongoose.Schema(
+          {
+            companyName: String,
+            title: String,
+            description: String,
+            salary: String,
+            salaryType: String,
+            vacancies: String,
+            address: String,
+            contactNo: String,
+            skills: String,
+            verified: Boolean,
+          },
+          {
+            timestamps: true,
+          }
+        ),
+      },
+    ],
   },
   { timestamps: true }
 );
@@ -60,13 +81,25 @@ const validateServiceProviders = (data) => {
     phoneNO: joi.string().min(10).max(14),
     address: joi.string().min(10),
     zipCode: joi.string().min(4).max(10),
-    id: joi.string(),
+    id: joi.objectId(),
     works: joi.object({
       catagory: joi.string().min(3).max(50),
       title: joi.string().min(5).max(20),
       descrption: joi.string().min(10).max(200),
       offers: joi.string().min(5).max(200),
       status: joi.boolean(),
+    }),
+    jobs: joi.object({
+      companyName: joi.string().required().min(4),
+      title: joi.string().required().min(4),
+      description: joi.string().required().min(4),
+      salary: joi.string().required().min(4),
+      salaryType: joi.string().required().min(4),
+      vacancies: joi.string().required().min(1),
+      address: joi.string().required().min(4),
+      contactNo: joi.string().required().min(4),
+      skills: joi.string().min(4),
+      verified: joi.boolean().required(),
     }),
     reviews: joi.object({
       userID: joi.string(),
