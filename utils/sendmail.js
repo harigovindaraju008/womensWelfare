@@ -13,46 +13,30 @@ module.exports = async function sendMail(output, subject, userEmail, purpose) {
       pass: process.env.EMAIL_PASS,
     },
   });
-
-  if (purpose === "otpVerification") {
-    ejs.renderFile(
-      __dirname + "/templates/verifyOtp.ejs",
-      { output: output },
-      async (err, data) => {
-        if (err) {
-          console.log(err);
-        } else {
-          sent = true;
-          let info = await transporter.sendMail({
-            from: '"Womens Welfare" <' + process.env.EMAIL_USER + ">", // sender address
-            to: [userEmail], // list of receivers
-            subject: subject, // Subject line
-            text: subject, // plain text body
-            html: data, // html body
-          });
-          //console.log("Message sent: %s", info.messageId);
+  try {
+    if (purpose === "otpVerification") {
+      ejs.renderFile(
+        __dirname + "/templates/verifyOtp.ejs",
+        { output: output },
+        async (err, data) => {
+          if (err) {
+            console.log(err);
+          } else {
+            sent = true;
+            let info = await transporter.sendMail({
+              from: '"Womens Welfare" <' + process.env.EMAIL_USER + ">", // sender address
+              to: [userEmail], // list of receivers
+              subject: subject, // Subject line
+              text: subject, // plain text body
+              html: data, // html body
+            });
+            //console.log("Message sent: %s", info.messageId);
+          }
         }
-      }
-    );
+      );
+    }
+  } catch (err) {
+    console.log(err.message);
   }
-  // else if (purpose === "forgotPwd" )
-  // {
-  //   ejs.renderFile(__dirname+"/forgotPwdLink.ejs",{output:output,userEmail:userEmail}, async(err, data) =>
-  //   {
-  //     if (err) {
-  //       console.log(err);
-  //   } else {
-  //     let info = await transporter.sendMail({
-  //       from: '"Clean Thuni" <' +  process.env.EMAIL_USER + ">", // sender address
-  //       to: [userEmail.email], // list of receivers
-  //       subject: subject, // Subject line
-  //       text: subject, // plain text body
-  //       html: data, // html body
-  //     });
-  //     console.log("Message sent: %s", info.messageId);
-  //   }
-  //   });
-
-  // }
   return sent;
 };

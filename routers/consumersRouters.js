@@ -48,7 +48,7 @@ routers.post("/otpGenerate", [validate(validationOtp)], async (req, res) => {
     "otpVerification"
   );
 
-  if (true) {
+  if (sent) {
     setTimeout(async () => {
       await VerifyOtp.deleteOne({
         generatedOtp: savedOTP.generatedOtp,
