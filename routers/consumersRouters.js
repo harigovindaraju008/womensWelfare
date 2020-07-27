@@ -170,7 +170,7 @@ routers.post(
 routers.post("/login", [validate(consumerValidator)], async (req, res) => {
   const verifyingUser = await Consumers.findOne({ emailId: req.body.emailId });
   if (!verifyingUser) {
-    res.status(400).send("emailid or password invalid");
+    res.status(400).send(message("emailid or password invalid"));
     return;
   }
   const verifyingUserPwd = await bcrypt.compare(
@@ -179,7 +179,7 @@ routers.post("/login", [validate(consumerValidator)], async (req, res) => {
   );
 
   if (!verifyingUserPwd) {
-    res.status(400).send("emailid or password invalid");
+    res.status(400).send(message("emailid or password invalid"));
     return;
   }
   try {
