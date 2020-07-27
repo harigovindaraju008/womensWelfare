@@ -188,7 +188,7 @@ routers.post("/login", [validate(consumerValidator)], async (req, res) => {
     const token = jwt.sign(emailId, SecretKey);
     res.status(200).header({ auth_token: token }).json({ auth_token: token });
   } catch (err) {
-    res.status(400).send(err.message);
+    res.status(400).send(message(err.message));
   }
 });
 
@@ -202,7 +202,7 @@ routers.put(
     const update = await Consumers.findByIdAndUpdate(ID, updateData, {
       new: true,
     });
-    res.status(200).send("updated successfully!!");
+    res.status(200).send(message("updated successfully!!"));
   }
 );
 
