@@ -3,6 +3,7 @@ const { Consumers, consumerValidator } = require("../models/consumer");
 const verifyTokenUser = require("../middlewares/verifyTokenUsers");
 const validate = require("../middlewares/validate");
 const validateObjectId = require("../middlewares/validateObjectId");
+const message = require("../middlewares/message");
 
 //npm packages
 const express = require("express");
@@ -11,7 +12,6 @@ const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const { validationOtp, VerifyOtp } = require("../models/otpVerification");
 const sendmail = require("../utils/sendmail");
-const mongoose = require("mongoose");
 
 //custom middelware
 const ReferalsMiddleware = async (req, res, next) => {
@@ -23,7 +23,7 @@ const ReferalsMiddleware = async (req, res, next) => {
     if (referedBy) {
       return next();
     }
-    return res.status(400).send("invaild referal code");
+    return res.status(400).send(message("invaild referal code"));
   }
   return next();
 };
@@ -125,7 +125,7 @@ routers.post(
       });
       if (vaildEmail) {
         //   console.log(vaildEmail, consumerDetails.emailId);
-        res.status(400).send("email is exist");
+        res.status(400).send(message("email is exist"));
         return;
       }
       const referedValue = req.body.referals.referedBy || req.query.referedBy;
@@ -158,10 +158,10 @@ routers.post(
         );
       }
       await referedPersons(referedValue, res, savedconsumers);
-      res.status(200).send("registered successfully");
+      res.status(200).send(message("registered successfully"));
     } catch (err) {
       console.log(err); //error handlors
-      res.status(400).send(err.message);
+      res.status(400).send(message(err.message));
     }
   }
 );
