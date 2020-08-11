@@ -1,6 +1,6 @@
 //custom imports
 const { Consumers, consumerValidator } = require("../models/consumer");
-const verifyTokenUser = require("../middlewares/verifyTokenUsers");
+const verifyUserToken = require("../middlewares/verifyTokenUsers");
 const validate = require("../middlewares/validate");
 const validateObjectId = require("../middlewares/validateObjectId");
 const message = require("../middlewares/message");
@@ -86,7 +86,7 @@ routers.post("/otpVerify", async (req, res) => {
 });
 
 //fetching all consumers
-routers.get("/", verifyTokenUser, async (req, res) => {
+routers.get("/", verifyUserToken, async (req, res) => {
   const allConsumers = await Consumers.find({})
     .populate({
       path: "referals.referalsMembers",
@@ -98,7 +98,7 @@ routers.get("/", verifyTokenUser, async (req, res) => {
 });
 
 //getting particular login user
-routers.get("/userInfo", verifyTokenUser, async (req, res) => {
+routers.get("/userInfo", verifyUserToken, async (req, res) => {
   const currentConsumers = await Consumers.findOne({ emailId: req.emailId })
     .populate({
       path: "referals.referalsMembers",
@@ -195,7 +195,7 @@ routers.post("/login", [validate(consumerValidator)], async (req, res) => {
 //update consumers
 routers.put(
   "/update/:id",
-  [verifyTokenUser, validateObjectId, validate(consumerValidator)],
+  [verifyUserToken, validateObjectId, validate(consumerValidator)],
   async (req, res) => {
     const ID = req.params.id;
     const updateData = req.body;

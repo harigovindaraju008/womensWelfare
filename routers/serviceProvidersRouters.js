@@ -5,6 +5,7 @@ const {
 } = require("../models/serviceProviders");
 const validate = require("../middlewares/validate");
 const verifyProviders = require("../middlewares/verifyTokenProviders");
+const verifyUserToken = require("../middlewares/verifyTokenUsers");
 const { saveImage, loadImage } = require("../utils/imageProcess");
 const validateObjectId = require("../middlewares/validateObjectId");
 
@@ -16,7 +17,7 @@ const jwt = require("jsonwebtoken");
 const mongoose = require("mongoose");
 
 //geting all services Providers
-routers.get("/", verifyProviders, async (req, res) => {
+routers.get("/", verifyUserToken, async (req, res) => {
   const allServiceProviders = await ServiceProviders.find({});
   //   .populate({
   //     path: "referals.referalsMembers",

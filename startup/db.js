@@ -2,7 +2,7 @@ const winston = require("winston");
 const mongoose = require("mongoose");
 
 module.exports = function () {
-  const db = process.env.MONGODB_URL;
+  const db = process.env.MONGODB_URLL;
   mongoose.set("useCreateIndex", true);
   mongoose
     .connect(db, {
