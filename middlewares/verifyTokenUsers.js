@@ -1,7 +1,7 @@
 const jwt = require("jsonwebtoken");
 const { Consumers } = require("../models/consumer");
 
-module.exports = async function verifyToken(req, res, next) {
+module.exports = async function verifyUserToken(req, res, next) {
   const token = req.header("auth_token");
   const SecretKey = process.env.SECRET_KEY;
   // for developer purpose to testing

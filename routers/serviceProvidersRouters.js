@@ -71,7 +71,7 @@ routers.post(
   [validate(validateServiceProviders)],
   async (req, res) => {
     if (!req.files) {
-      return res.status(400).send("invalid key value ");
+      return res.status(400).send("invalid Photo value ");
     }
 
     const { isError, message } = await imageValidationObject(
@@ -249,7 +249,7 @@ routers.put("/addWorkPic/:id", async (req, res) => {
 //adding reviews
 routers.post(
   "/userReview",
-  [verifyProviders, validate(validateServiceProviders)],
+  [verifyUserToken, validate(validateServiceProviders)],
   async (req, res) => {
     // const { error, value } = validateServiceProviders(req.body);
     // if (error) {
@@ -287,7 +287,7 @@ routers.post(
 //adding compliant
 routers.post(
   "/userCompliant",
-  [verifyProviders, validate(validateServiceProviders)],
+  [verifyUserToken, validate(validateServiceProviders)],
   async (req, res) => {
     const value = req.body;
     const checkingWorkID = mongoose.Types.ObjectId.isValid(value.id.toString());
