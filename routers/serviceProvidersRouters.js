@@ -43,7 +43,7 @@ routers.get("/userInfo", verifyProviders, async (req, res) => {
 });
 
 //geting service provider image
-routers.get("/:id/providerImage", verifyProviders, async (req, res) => {
+routers.get("/:id/providerImage", async (req, res) => {
   const serviceProviderId = req.params.id;
   loadImage("serviceProviders.image", serviceProviderId, res);
 });
