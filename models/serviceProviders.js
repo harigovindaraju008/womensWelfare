@@ -88,6 +88,7 @@ const validateServiceProviders = (data) => {
       descrption: joi.string().min(10).max(200),
       offers: joi.string().min(5).max(200),
       status: joi.boolean(),
+      price: joi.string().min(5).max(20),
     }),
     jobs: joi.object({
       companyName: joi.string().required().min(4),
