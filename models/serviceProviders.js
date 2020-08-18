@@ -22,6 +22,7 @@ const serviceProvidersSchemas = mongoose.Schema(
           images: Array,
           offers: String,
           ratings: String,
+          price: String,
           status: Boolean,
           reviews: [
             {
